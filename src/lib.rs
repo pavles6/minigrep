@@ -7,13 +7,18 @@ pub struct Config {
 }
 
 impl Config {
-    pub fn build(args: &[String]) -> Result<Config, &'static str> {
-        if args.len() < 3 {
-            return Err("Not enough arguments provided");
-        }
+    pub fn build(mut args: impl Iterator<Item = String>) -> Result<Config, &'static str> {
+        args.next(); // skipping first command line arg which is path to the executable
 
-        let query = args[1].clone();
-        let file_path = args[2].clone();
+        let query = match args.next() {
+            Some(q) => q,
+            None => return Err("Failed to parse query argument."),
+        };
+
+        let file_path = match args.next() {
+            Some(fp) => fp,
+            None => return Err("Failed to parse file path argument."),
+        };
 
         let ignore_case = env::var("IGNORE_CASE").is_ok();
 

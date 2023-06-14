@@ -3,9 +3,7 @@ use std::{env, error::Error, process};
 use minigrep::Config;
 
 fn main() -> Result<(), Box<dyn Error>> {
-    let args: Vec<String> = env::args().collect();
-
-    let cfg = Config::build(&args).unwrap_or_else(|err| {
+    let cfg = Config::build(env::args()).unwrap_or_else(|err| {
         eprintln!("An error occurred while parsing args: {err}");
         process::exit(1)
     });
